@@ -1,0 +1,17 @@
+# Dependencies (pesadas, se reinstalan con npm install)
+node_modules/
+package-lock.json
+
+# Logs del sistema
+npm-debug.log*
+yarn-debug.log*
+*.log
+
+# Archivos temporales del sistema
+.DS_Store
+Thumbs.db
+*.tmp
+*.temp
+
+# IDE temporal
+.vscode/settings.json
