@@ -235,6 +235,50 @@ const validateChangeStatus = [
     .withMessage('Las notas deben tener máximo 1000 caracteres')
 ];
 
+// Validaciones para perfil de postulante
+const validateCreatePerfilPostulante = [
+  body('titulo_profesional')
+    .optional()
+    .isLength({ min: 2, max: 100 })
+    .withMessage('El título profesional debe tener entre 2 y 100 caracteres'),
+
+  body('descripcion')
+    .optional()
+    .isLength({ max: 2000 })
+    .withMessage('La descripción debe tener máximo 2000 caracteres'),
+
+  body('ubicacion')
+    .optional()
+    .isLength({ max: 100 })
+    .withMessage('La ubicación debe tener máximo 100 caracteres'),
+
+  body('fecha_nacimiento')
+    .optional()
+    .isDate()
+    .withMessage('Fecha de nacimiento inválida'),
+
+  body('nivel_experiencia')
+    .optional()
+    .isIn(['sin_experiencia', 'junior', 'semi_senior', 'senior', 'lead'])
+    .withMessage('Nivel de experiencia inválido'),
+
+  body('salario_esperado')
+    .optional()
+    .isNumeric()
+    .withMessage('Salario esperado debe ser un número'),
+
+  body('modalidad_preferida')
+    .optional()
+    .isIn(['presencial', 'remoto', 'hibrido'])
+    .withMessage('Modalidad preferida inválida'),
+
+  body('disponibilidad_inmediata')
+    .optional()
+    .isBoolean()
+    .withMessage('Disponibilidad inmediata debe ser verdadero o falso')
+];
+
+// Actualizar module.exports:
 module.exports = {
   validateRegister,
   validateLogin,
@@ -244,5 +288,7 @@ module.exports = {
   validateCreateOferta,
   validateUpdateOferta: validateCreateOferta,
   validateCreatePostulacion,
-  validateChangeStatus
+  validateChangeStatus,
+  validateCreatePerfilPostulante,
+  validateUpdatePerfilPostulante: validateCreatePerfilPostulante
 };

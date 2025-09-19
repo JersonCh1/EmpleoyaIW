@@ -7,7 +7,7 @@
     <style>
         body { 
             font-family: Arial, sans-serif; 
-            max-width: 800px; 
+            max-width: 900px; 
             margin: 50px auto; 
             padding: 20px;
             background: #f5f5f5;
@@ -27,13 +27,18 @@
             font-weight: bold;
             color: #333;
         }
-        input, select { 
+        input, select, textarea { 
             width: 100%; 
             padding: 12px; 
             border: 1px solid #ddd; 
             border-radius: 4px;
             font-size: 16px;
             box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 80px;
         }
         button { 
             background: #007bff; 
@@ -75,12 +80,33 @@
             word-break: break-all;
         }
         h1 { color: #333; text-align: center; }
-        h2 { color: #666; border-bottom: 2px solid #007bff; padding-bottom: 10px; }
+        h2 { color: #666; border-bottom: 2px solid #007bff; padding-bottom: 10px; margin-top: 30px; }
+        .section-postulante {
+            border: 2px solid #28a745;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .section-empleador {
+            border: 2px solid #dc3545;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .section-title {
+            color: #fff;
+            padding: 8px 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .postulante-title { background: #28a745; }
+        .empleador-title { background: #dc3545; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🚀 EMPLEOYA - Probador de APIs</h1>
+        <h1>🚀 EMPLEOYA - Probador de APIs Completo</h1>
         
         <div id="messages"></div>
 
@@ -129,6 +155,113 @@
         <button type="button" onclick="getProfile()">Obtener Perfil</button>
         <button type="button" onclick="testPostulante()">Test Postulante</button>
         <button type="button" onclick="testEmpleador()">Test Empleador</button>
+
+        <div class="section-postulante">
+            <div class="section-title postulante-title">FUNCIONES PARA POSTULANTES</div>
+            
+            <h2>4. Gestión de Perfil de Postulante</h2>
+            <div class="form-group">
+                <label>Título Profesional:</label>
+                <input type="text" id="tituloProfesional" value="Desarrollador Full Stack">
+            </div>
+            <div class="form-group">
+                <label>Descripción:</label>
+                <textarea id="descripcionPerfil">Desarrollador con 3 años de experiencia en React, Node.js y bases de datos. Apasionado por crear soluciones tecnológicas innovadoras y trabajar en equipos ágiles.</textarea>
+            </div>
+            <div class="form-group">
+                <label>Ubicación:</label>
+                <input type="text" id="ubicacionPerfil" value="Lima, Perú">
+            </div>
+            <div class="form-group">
+                <label>Fecha de Nacimiento:</label>
+                <input type="date" id="fechaNacimiento" value="1995-06-15">
+            </div>
+            <div class="form-group">
+                <label>Nivel de Experiencia:</label>
+                <select id="nivelExperiencia">
+                    <option value="sin_experiencia">Sin experiencia</option>
+                    <option value="junior">Junior</option>
+                    <option value="semi_senior" selected>Semi Senior</option>
+                    <option value="senior">Senior</option>
+                    <option value="lead">Lead</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Salario Esperado (PEN):</label>
+                <input type="number" id="salarioEsperado" value="4500">
+            </div>
+            <div class="form-group">
+                <label>Modalidad Preferida:</label>
+                <select id="modalidadPreferida">
+                    <option value="presencial">Presencial</option>
+                    <option value="remoto">Remoto</option>
+                    <option value="hibrido" selected>Híbrido</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="disponibilidadInmediata" checked style="width: auto; margin-right: 8px;">
+                    Disponibilidad inmediata
+                </label>
+            </div>
+            <button type="button" onclick="createPerfil()">Crear Perfil</button>
+            <button type="button" onclick="getMyPerfil()">Ver Mi Perfil</button>
+            <button type="button" onclick="updatePerfil()">Actualizar Perfil</button>
+            <button type="button" onclick="getMyStats()">Mis Estadísticas</button>
+            <button type="button" onclick="checkCompletitud()">Verificar Completitud</button>
+        </div>
+
+        <div class="section-empleador">
+            <div class="section-title empleador-title">FUNCIONES PARA EMPLEADORES</div>
+            
+            <h2>5. Búsqueda de Postulantes</h2>
+            <div class="form-group">
+                <label>Buscar por palabra clave:</label>
+                <input type="text" id="searchPostulantes" placeholder="Desarrollador, React, Python...">
+            </div>
+            <div class="form-group">
+                <label>Ubicación:</label>
+                <input type="text" id="ubicacionBusqueda" placeholder="Lima, Arequipa, Cusco...">
+            </div>
+            <div class="form-group">
+                <label>Nivel de Experiencia:</label>
+                <select id="nivelBusqueda">
+                    <option value="">Todos los niveles</option>
+                    <option value="sin_experiencia">Sin experiencia</option>
+                    <option value="junior">Junior</option>
+                    <option value="semi_senior">Semi Senior</option>
+                    <option value="senior">Senior</option>
+                    <option value="lead">Lead</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Modalidad Preferida:</label>
+                <select id="modalidadBusqueda">
+                    <option value="">Todas las modalidades</option>
+                    <option value="presencial">Presencial</option>
+                    <option value="remoto">Remoto</option>
+                    <option value="hibrido">Híbrido</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Salario Mínimo:</label>
+                <input type="number" id="salarioMinBusqueda" placeholder="3000">
+            </div>
+            <div class="form-group">
+                <label>Salario Máximo:</label>
+                <input type="number" id="salarioMaxBusqueda" placeholder="8000">
+            </div>
+            <div class="form-group">
+                <label>Edad Mínima:</label>
+                <input type="number" id="edadMinBusqueda" placeholder="22">
+            </div>
+            <div class="form-group">
+                <label>Edad Máxima:</label>
+                <input type="number" id="edadMaxBusqueda" placeholder="35">
+            </div>
+            <button type="button" onclick="searchPostulantes()">Buscar Postulantes</button>
+            <button type="button" onclick="clearFilters()">Limpiar Filtros</button>
+        </div>
 
         <div id="tokenDisplay" class="token-display" style="display: none;">
             <strong>Token actual:</strong><br>
