@@ -190,6 +190,8 @@ app.use('/api/auth', require('./src/routes/authRoutes'));
 // Rutas de categorías (cuando las creemos)
 // app.use('/api/categorias', require('./src/routes/categoriaRoutes'));
 
+app.use('/api/perfiles', require('./src/routes/perfilPostulanteRoutes'));
+
 // Rutas de empresas (cuando las creemos)
  app.use('/api/empresas', require('./src/routes/empresaRoutes'));
 
