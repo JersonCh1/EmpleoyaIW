@@ -174,6 +174,7 @@ const updatePerfil = async (req, res) => {
 };
 
 // Buscar postulantes con filtros (empleadores)
+// Buscar postulantes con filtros (empleadores)
 const searchPostulantes = async (req, res) => {
   try {
     if (req.user.tipo_usuario !== 'empleador' && req.user.tipo_usuario !== 'administrador') {
@@ -183,35 +184,74 @@ const searchPostulantes = async (req, res) => {
       });
     }
 
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
+    // Importar la conexión de base de datos
+    const db = require('../config/database');
     
-    const filters = {
-      search: req.query.search,
-      ubicacion: req.query.ubicacion,
-      nivel_experiencia: req.query.nivel_experiencia ? req.query.nivel_experiencia.split(',') : undefined,
-      modalidad_preferida: req.query.modalidad_preferida ? req.query.modalidad_preferida.split(',') : undefined,
-      salario_min: req.query.salario_min ? parseInt(req.query.salario_min) : undefined,
-      salario_max: req.query.salario_max ? parseInt(req.query.salario_max) : undefined,
-      edad_min: req.query.edad_min ? parseInt(req.query.edad_min) : undefined,
-      edad_max: req.query.edad_max ? parseInt(req.query.edad_max) : undefined,
-      disponibilidad_inmediata: req.query.disponibilidad_inmediata === 'true',
-      habilidades: req.query.habilidades ? req.query.habilidades.split(',') : undefined,
-      orden: req.query.orden || 'fecha_desc'
-    };
-
-    // Remover filtros vacíos
-    Object.keys(filters).forEach(key => {
-      if (filters[key] === undefined || filters[key] === '' || 
-          (Array.isArray(filters[key]) && filters[key].length === 0)) {
-        delete filters[key];
-      }
-    });
-
-    const result = await PerfilPostulante.findWithFilters(filters, page, limit);
-
+    const { search, ubicacion, nivel_experiencia, modalidad_preferida } = req.query;
+    
+    // Query base simplificada
+    let sql = `
+      SELECT 
+        p.id_perfil,
+        p.titulo_profesional,
+        p.descripcion,
+        p.ubicacion,
+        p.nivel_experiencia,
+        p.modalidad_preferida,
+        p.salario_esperado,
+        p.disponibilidad_inmediata,
+        u.nombre,
+        u.apellido,
+        u.email,
+        TIMESTAMPDIFF(YEAR, p.fecha_nacimiento, CURDATE()) as edad
+      FROM perfil_postulante p
+      JOIN usuario u ON p.id_usuario = u.id_usuario
+      WHERE u.activo = true AND u.tipo_usuario = 'postulante'
+    `;
+    
+    const params = [];
+    
+    // Filtro de búsqueda de texto
+    if (search && search.trim() !== '') {
+      sql += ` AND (
+        p.titulo_profesional LIKE ? OR 
+        p.descripcion LIKE ? OR 
+        u.nombre LIKE ? OR 
+        u.apellido LIKE ?
+      )`;
+      const searchTerm = `%${search.trim()}%`;
+      params.push(searchTerm, searchTerm, searchTerm, searchTerm);
+    }
+    
+    // Filtro de ubicación
+    if (ubicacion && ubicacion.trim() !== '') {
+      sql += ` AND p.ubicacion LIKE ?`;
+      params.push(`%${ubicacion.trim()}%`);
+    }
+    
+    // Filtro de nivel de experiencia
+    if (nivel_experiencia && nivel_experiencia.trim() !== '') {
+      sql += ` AND p.nivel_experiencia = ?`;
+      params.push(nivel_experiencia.trim());
+    }
+    
+    // Filtro de modalidad preferida
+    if (modalidad_preferida && modalidad_preferida.trim() !== '') {
+      sql += ` AND p.modalidad_preferida = ?`;
+      params.push(modalidad_preferida.trim());
+    }
+    
+    // Ordenar por relevancia
+    sql += ` ORDER BY p.fecha_actualizacion DESC LIMIT 50`;
+    
+    console.log('SQL Query:', sql);
+    console.log('Parameters:', params);
+    
+    // Ejecutar la consulta
+    const results = await db.query(sql, params);
+    
     // Filtrar información sensible para la búsqueda
-    const postulantesPublicos = result.postulantes.map(postulante => ({
+    const postulantesPublicos = results.map(postulante => ({
       id_perfil: postulante.id_perfil,
       titulo_profesional: postulante.titulo_profesional,
       descripcion: postulante.descripcion,
@@ -223,20 +263,34 @@ const searchPostulantes = async (req, res) => {
       edad: postulante.edad,
       nombre: postulante.nombre,
       apellido: postulante.apellido,
-      total_experiencias: postulante.total_experiencias || 0,
-      habilidades: postulante.habilidades ? postulante.habilidades.split(',') : []
+      total_experiencias: 0, // Por ahora
+      habilidades: [] // Por ahora
     }));
 
     res.json({
+      success: true,
+      message: `Se encontraron ${postulantesPublicos.length} postulantes`,
       postulantes: postulantesPublicos,
-      pagination: result.pagination,
-      filtros_aplicados: result.filtros_aplicados
+      pagination: {
+        page: 1,
+        limit: 50,
+        total: postulantesPublicos.length,
+        totalPages: 1
+      },
+      filtros_aplicados: {
+        search: search || null,
+        ubicacion: ubicacion || null,
+        nivel_experiencia: nivel_experiencia || null,
+        modalidad_preferida: modalidad_preferida || null
+      }
     });
 
   } catch (error) {
     console.error('Error buscando postulantes:', error.message);
     res.status(500).json({
-      error: 'Error interno del servidor'
+      success: false,
+      error: 'Error buscando postulantes',
+      message: error.message
     });
   }
 };
