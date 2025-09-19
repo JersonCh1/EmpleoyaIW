@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EMPLEOYA - Test APIs</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            max-width: 800px; 
+            margin: 50px auto; 
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .form-group { 
+            margin-bottom: 20px; 
+        }
+        label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-weight: bold;
+            color: #333;
+        }
+        input, select { 
+            width: 100%; 
+            padding: 12px; 
+            border: 1px solid #ddd; 
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        button { 
+            background: #007bff; 
+            color: white; 
+            padding: 12px 20px; 
+            border: none; 
+            border-radius: 4px; 
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        button:hover { 
+            background: #0056b3; 
+        }
+        .success { 
+            background: #d4edda; 
+            color: #155724; 
+            padding: 15px; 
+            border-radius: 4px; 
+            margin: 10px 0;
+            border-left: 4px solid #28a745;
+        }
+        .error { 
+            background: #f8d7da; 
+            color: #721c24; 
+            padding: 15px; 
+            border-radius: 4px; 
+            margin: 10px 0;
+            border-left: 4px solid #dc3545;
+        }
+        .token-display {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+            border-left: 4px solid #007bff;
+            font-family: monospace;
+            word-break: break-all;
+        }
+        h1 { color: #333; text-align: center; }
+        h2 { color: #666; border-bottom: 2px solid #007bff; padding-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 EMPLEOYA - Probador de APIs</h1>
+        
+        <div id="messages"></div>
+
+        <h2>1. Registro de Usuario</h2>
+        <div class="form-group">
+            <label>Email:</label>
+            <input type="email" id="regEmail" value="test@ejemplo.com" required>
+        </div>
+        <div class="form-group">
+            <label>Contraseña:</label>
+            <input type="password" id="regPassword" value="MiPassword123" required>
+        </div>
+        <div class="form-group">
+            <label>Nombre:</label>
+            <input type="text" id="regNombre" value="Juan" required>
+        </div>
+        <div class="form-group">
+            <label>Apellido:</label>
+            <input type="text" id="regApellido" value="Pérez" required>
+        </div>
+        <div class="form-group">
+            <label>Teléfono:</label>
+            <input type="tel" id="regTelefono" value="+51987654321">
+        </div>
+        <div class="form-group">
+            <label>Tipo de Usuario:</label>
+            <select id="regTipo">
+                <option value="postulante">Postulante</option>
+                <option value="empleador">Empleador</option>
+            </select>
+        </div>
+        <button type="button" onclick="register()">Registrar Usuario</button>
+
+        <h2>2. Iniciar Sesión</h2>
+        <div class="form-group">
+            <label>Email:</label>
+            <input type="email" id="loginEmail" value="test@ejemplo.com" required>
+        </div>
+        <div class="form-group">
+            <label>Contraseña:</label>
+            <input type="password" id="loginPassword" value="MiPassword123" required>
+        </div>
+        <button type="button" onclick="login()">Iniciar Sesión</button>
+
+        <h2>3. Perfil de Usuario (requiere token)</h2>
+        <button type="button" onclick="getProfile()">Obtener Perfil</button>
+        <button type="button" onclick="testPostulante()">Test Postulante</button>
+        <button type="button" onclick="testEmpleador()">Test Empleador</button>
+
+        <div id="tokenDisplay" class="token-display" style="display: none;">
+            <strong>Token actual:</strong><br>
+            <span id="currentToken"></span>
+        </div>
+    </div>
+
+    <script src="test.js"></script>
+</body>
+</html>
