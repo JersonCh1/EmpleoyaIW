@@ -1,132 +1,96 @@
-# 📤 PASOS PARA SUBIR A GITHUB
+# Cómo subir el proyecto a GitHub
 
-## ✅ Paso 1: Verificar repositorio remoto
+## Paso 1: Ver que el repo esté bien configurado
 ```bash
 cd "C:\Users\Jerson\Desktop\mis-proyectos\empleoya"
 git remote -v
 ```
-**✅ COMPLETADO** - Apunta a: https://github.com/JersonCh1/EmpleoyaIW.git
+**Listo** - Ya apunta a: https://github.com/JersonCh1/EmpleoyaIW.git
 
 ---
 
-## ✅ Paso 2: Verificar estado del proyecto
+## Paso 2: Ver qué archivos cambiaron
 ```bash
 git status
 ```
-**Estado actual:**
-- ✅ Archivos nuevos listos para agregar (MyWebApps/, db.sqlite3, etc.)
-- ✅ Archivos antiguos eliminados (backend/, database/, etc.)
+Acá verás todos los archivos nuevos y modificados
 
 ---
 
-## 🔄 Paso 3: Agregar todos los archivos
+## Paso 3: Agregar todo al staging
 ```bash
 git add .
 ```
-**Esto agregará:**
-- Archivos nuevos del proyecto Django
-- Cambios en .gitignore
-- Eliminaciones de carpetas antiguas
-- README.md actualizado
+Esto agrega todos los cambios para el commit
 
 ---
 
-## 🔄 Paso 4: Verificar lo que se va a subir
+## Paso 4: Ver qué se va a subir (opcional)
 ```bash
 git status
 ```
 
 ---
 
-## 🔄 Paso 5: Crear commit
+## Paso 5: Hacer el commit
 ```bash
-git commit -m "feat: Migración completa a Django - Sistema EMPLEOYA
+git commit -m "Proyecto EMPLEOYA completo
 
-- Transformación de Node.js/Express/MongoDB a Django/SQLite
-- Implementación completa de API REST con Django REST Framework
-- 15 templates HTML con diseño moderno y responsive
-- Sistema de autenticación por Token
-- Gestión de ofertas y postulaciones
-- Dashboards para empleadores y postulantes
-- Base de datos SQLite con datos de prueba cargados
-- Usuario admin: admin@empleoya.com / 1234
-- Documentación completa de API y uso
+Terminamos el proyecto de la bolsa de trabajo con Django.
+Tiene todo lo que pidieron: login, registro, ofertas, postulaciones,
+dashboards y API REST. Ya funciona todo.
 
-Desarrollado por: Piero De La Cruz & Jerson Chura
-Universidad Nacional de San Agustín - Ingeniería Web"
+admin@empleoya.com / 1234 para probar"
 ```
 
 ---
 
-## 🔄 Paso 6: Subir a GitHub
+## Paso 6: Subir todo a GitHub
 ```bash
 git push origin main
 ```
 
-**Si pide credenciales:**
-- Usuario: Tu usuario de GitHub
-- Token: Personal Access Token de GitHub (no contraseña)
+Si pide usuario y contraseña, usa tu GitHub username y un Personal Access Token
 
 ---
 
-## 🎯 PASOS RESUMIDOS:
+## Resumen rápido:
 
 ```bash
-# 1. Ir al directorio
 cd "C:\Users\Jerson\Desktop\mis-proyectos\empleoya"
-
-# 2. Agregar archivos
 git add .
-
-# 3. Hacer commit
-git commit -m "feat: Migración completa a Django - Sistema EMPLEOYA completo"
-
-# 4. Subir a GitHub
+git commit -m "Proyecto completo"
 git push origin main
 ```
 
 ---
 
-## ⚠️ Si hay conflictos:
+## Si te da error al hacer push:
 
-Si GitHub rechaza el push porque hay cambios en el repositorio remoto:
+Probablemente hay cambios en GitHub que no tienes local. Hace esto:
 
 ```bash
-# Traer cambios del remoto
 git pull origin main --rebase
-
-# Resolver conflictos si hay (poco probable)
-# Luego continuar:
 git push origin main
 ```
 
 ---
 
-## 🔐 Si pide autenticación:
+## Cómo conseguir el token de GitHub:
 
-GitHub ya NO acepta contraseñas, necesitas un **Personal Access Token**:
+GitHub ya no acepta contraseñas normales, necesitas un token:
 
-1. Ve a: https://github.com/settings/tokens
-2. Click en "Generate new token (classic)"
-3. Selecciona scope: `repo` (acceso completo a repositorios)
-4. Genera y copia el token
-5. Úsalo como contraseña cuando Git lo pida
-
----
-
-## ✅ Verificar subida exitosa:
-
-Después del push, verifica en:
-https://github.com/JersonCh1/EmpleoyaIW
-
-Deberías ver:
-- ✅ Carpeta MyWebApps/
-- ✅ Carpeta empleoya_django/
-- ✅ archivo db.sqlite3
-- ✅ README.md actualizado
-- ✅ Sin carpetas backend/, database/, docs/
+1. Entra a: https://github.com/settings/tokens
+2. Dale a "Generate new token (classic)"
+3. Marca la casilla de `repo`
+4. Genera el token y cópialo
+5. Úsalo como contraseña cuando git te lo pida
 
 ---
 
-**Estado:** Listo para ejecutar
-**Fecha:** 06 de Octubre, 2025
+## Verificar que se subió bien:
+
+Entra a https://github.com/JersonCh1/EmpleoyaIW y revisa que esté:
+- La carpeta MyWebApps/
+- El archivo db.sqlite3
+- El README actualizado

@@ -1,15 +1,15 @@
-# ✅ PROYECTO LIMPIO Y LISTO PARA SUBIR
+# Proyecto limpio y listo
 
-## 🧹 Limpieza Realizada
+## Lo que limpiamos
 
-### Carpetas Eliminadas ❌
-- ❌ `backend/` - Proyecto antiguo Node.js (no se usa)
-- ❌ `database/` - Scripts MySQL antiguos (no se usa)
-- ❌ `docs/` - Documentación antigua (no se usa)
-- ❌ `Informe/` - Archivos no relacionados (no se usa)
-- ❌ `.claude/` - Archivos internos de Claude (no necesarios)
+### Carpetas que borramos
+- `backend/` - Era el proyecto viejo en Node.js que ya no usamos
+- `database/` - Scripts de MySQL que ya no sirven
+- `docs/` - Docs viejas
+- `Informe/` - Cosas que no necesitábamos
+- `.claude/` - Archivos internos que no van al repo
 
-### Archivos Eliminados ❌
+### Archivos que borramos
 - ❌ `docker-compose.yml` - No se usa Docker
 - ❌ `API.md` - Documentación duplicada
 - ❌ `COMPLETADO.md` - Archivo temporal
