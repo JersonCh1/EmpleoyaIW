@@ -1,26 +1,25 @@
-# EMPLEOYA - Sistema de Bolsa Laboral
+# EMPLEOYA - Bolsa de Trabajo Online
 
-Sistema de gestión de empleo desarrollado con Django 5.2.7 y SQLite.
+Proyecto de bolsa laboral hecho con Django para el curso de Ingeniería Web. Permite a empresas publicar ofertas y a postulantes buscar trabajo.
 
-## 👥 Desarrolladores
+## 👥 Equipo
 
-- **Piero De La Cruz**
-- **Jerson Chura**
+- Piero De La Cruz
+- Jerson Chura
 
-**Universidad Nacional de San Agustín - Ingeniería Web**
+**Universidad La Salle - Ingeniería Web**
 
 ---
 
-## 🚀 Características
+## 🚀 Lo que hace
 
-- ✅ Sistema de autenticación completo (empleadores y postulantes)
-- ✅ Gestión de ofertas de trabajo
-- ✅ Sistema de postulaciones
-- ✅ Dashboards diferenciados por tipo de usuario
-- ✅ API REST con Django REST Framework
-- ✅ Autenticación por Token
-- ✅ Diseño moderno y responsive
-- ✅ Base de datos SQLite con datos de prueba
+- Login para empresas y postulantes
+- Las empresas pueden publicar ofertas de trabajo
+- Los postulantes pueden ver ofertas y postularse
+- Cada usuario tiene su propio dashboard
+- También tiene API REST por si queremos conectar con React después
+- Diseño responsive (se ve bien en celular)
+- Ya viene con datos de prueba cargados para probar rápido
 
 ---
 
@@ -31,46 +30,46 @@ Sistema de gestión de empleo desarrollado con Django 5.2.7 y SQLite.
 
 ---
 
-## 🛠️ Instalación
+## 🛠️ Cómo ejecutarlo
 
-### 1. Clonar el repositorio
+### 1. Clona el repo
 
 \`\`\`bash
 git clone https://github.com/JersonCh1/EmpleoyaIW.git
 cd EmpleoyaIW
 \`\`\`
 
-### 2. Crear entorno virtual
+### 2. Crea el entorno virtual (recomendado)
 
 \`\`\`bash
 python -m venv .venv
 \`\`\`
 
-### 3. Activar entorno virtual
+### 3. Activa el entorno
 
-**Windows:**
+Si estás en Windows:
 \`\`\`bash
 .venv\Scripts\activate
 \`\`\`
 
-**Linux/Mac:**
+Si estás en Linux/Mac:
 \`\`\`bash
 source .venv/bin/activate
 \`\`\`
 
-### 4. Instalar dependencias
+### 4. Instala las librerías necesarias
 
 \`\`\`bash
 pip install django djangorestframework django-cors-headers
 \`\`\`
 
-### 5. Iniciar el servidor
+### 5. Corre el servidor
 
 \`\`\`bash
 python manage.py runserver
 \`\`\`
 
-El servidor estará disponible en: **http://127.0.0.1:8000/**
+Luego abre en el navegador: **http://127.0.0.1:8000/**
 
 ---
 
@@ -183,4 +182,6 @@ python manage.py runserver
 
 ---
 
-**Ingeniería Web - UNSA - 2025**
+---
+
+Proyecto hecho para el curso de Ingeniería Web - Universidad La Salle 2025

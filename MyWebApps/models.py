@@ -3,9 +3,11 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils import timezone
 
+# Modelos para el sistema EMPLEOYA
+# Aquí definimos las tablas de la base de datos
 
 class UsuarioManager(BaseUserManager):
-    """Manager personalizado para el modelo Usuario"""
+    """Manager para crear usuarios - necesario para usar email en vez de username"""
 
     def create_user(self, email, password=None, **extra_fields):
         """Crear y guardar un usuario regular"""
