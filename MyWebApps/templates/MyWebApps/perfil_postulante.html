@@ -1,0 +1,137 @@
+{% extends 'MyWebApps/base.html' %}
+
+{% block title %}Mi Perfil - EMPLEOYA{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 900px; margin-top: 2rem;">
+    <h1 class="mb-3">Mi Perfil Profesional</h1>
+
+    <div class="card">
+        <form method="POST" action="{% url 'perfil_postulante' %}">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="titulo_profesional" class="form-label">Título Profesional / Cargo Deseado</label>
+                <input type="text" id="titulo_profesional" name="titulo_profesional" class="form-control"
+                       value="{{ perfil.titulo_profesional }}" placeholder="Ej: Desarrollador Full Stack">
+            </div>
+
+            <div class="form-group">
+                <label for="resumen_profesional" class="form-label">Resumen Profesional</label>
+                <textarea id="resumen_profesional" name="resumen_profesional" class="form-control" rows="5"
+                          placeholder="Describe tu experiencia, logros y objetivos profesionales...">{{ perfil.resumen_profesional }}</textarea>
+            </div>
+
+            <div class="grid grid-2">
+                <div class="form-group">
+                    <label for="nivel_experiencia" class="form-label">Nivel de Experiencia</label>
+                    <select id="nivel_experiencia" name="nivel_experiencia" class="form-control">
+                        <option value="sin_experiencia" {% if perfil.nivel_experiencia == 'sin_experiencia' %}selected{% endif %}>Sin Experiencia</option>
+                        <option value="junior" {% if perfil.nivel_experiencia == 'junior' %}selected{% endif %}>Junior (0-2 años)</option>
+                        <option value="semi_senior" {% if perfil.nivel_experiencia == 'semi_senior' %}selected{% endif %}>Semi Senior (2-5 años)</option>
+                        <option value="senior" {% if perfil.nivel_experiencia == 'senior' %}selected{% endif %}>Senior (5+ años)</option>
+                        <option value="experto" {% if perfil.nivel_experiencia == 'experto' %}selected{% endif %}>Experto (10+ años)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="años_experiencia" class="form-label">Años de Experiencia</label>
+                    <input type="number" id="años_experiencia" name="años_experiencia" class="form-control"
+                           min="0" max="50" value="{{ perfil.años_experiencia }}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="habilidades" class="form-label">Habilidades</label>
+                <textarea id="habilidades" name="habilidades" class="form-control" rows="3"
+                          placeholder="Ej: JavaScript, React, Node.js, Python, Django, SQL, Git...">{{ perfil.habilidades }}</textarea>
+                <small class="text-muted">Separa las habilidades con comas</small>
+            </div>
+
+            <div class="grid grid-2">
+                <div class="form-group">
+                    <label for="ubicacion" class="form-label">Ubicación</label>
+                    <input type="text" id="ubicacion" name="ubicacion" class="form-control"
+                           value="{{ perfil.ubicacion }}" placeholder="Lima, Peru">
+                </div>
+
+                <div class="form-group">
+                    <label for="disponibilidad" class="form-label">Disponibilidad</label>
+                    <select id="disponibilidad" name="disponibilidad" class="form-control">
+                        <option value="inmediata" {% if perfil.disponibilidad == 'inmediata' %}selected{% endif %}>Inmediata</option>
+                        <option value="2_semanas" {% if perfil.disponibilidad == '2_semanas' %}selected{% endif %}>2 semanas</option>
+                        <option value="1_mes" {% if perfil.disponibilidad == '1_mes' %}selected{% endif %}>1 mes</option>
+                        <option value="negociable" {% if perfil.disponibilidad == 'negociable' %}selected{% endif %}>Negociable</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="salario_esperado" class="form-label">Salario Esperado (PEN)</label>
+                    <input type="number" id="salario_esperado" name="salario_esperado" class="form-control"
+                           step="0.01" value="{{ perfil.salario_esperado }}" placeholder="3500.00">
+                </div>
+
+                <div class="form-group">
+                    <label for="cv_url" class="form-label">URL de tu CV</label>
+                    <input type="url" id="cv_url" name="cv_url" class="form-control"
+                           value="{{ perfil.cv_url }}" placeholder="https://drive.google.com/...">
+                </div>
+            </div>
+
+            <div class="card" style="background: var(--light); margin-bottom: 1.5rem;">
+                <h3 style="font-size: 1rem; margin-bottom: 1rem;">Información Personal</h3>
+                <div style="font-size: 0.875rem;">
+                    <p style="margin: 0.5rem 0;"><strong>Nombre:</strong> {{ user.nombre_completo }}</p>
+                    <p style="margin: 0.5rem 0;"><strong>Email:</strong> {{ user.email }}</p>
+                    {% if user.telefono %}
+                    <p style="margin: 0.5rem 0;"><strong>Teléfono:</strong> {{ user.telefono }}</p>
+                    {% endif %}
+                    <p style="margin: 0.5rem 0;"><strong>Fecha de registro:</strong> {{ user.fecha_registro|date:"d/m/Y" }}</p>
+                </div>
+            </div>
+
+            <div class="card" style="background: #f0f9ff; border: 1px solid #bfdbfe; margin-bottom: 1.5rem;">
+                <h3 style="font-size: 1rem; margin-bottom: 0.5rem; color: var(--primary);">
+                    💡 Consejos para un buen perfil
+                </h3>
+                <ul style="margin: 0; padding-left: 1.5rem; font-size: 0.875rem;">
+                    <li>Un resumen profesional claro y conciso aumenta tus oportunidades</li>
+                    <li>Lista todas tus habilidades relevantes</li>
+                    <li>Mantén tu CV actualizado y accesible</li>
+                    <li>Los empleadores verán esta información cuando postules</li>
+                    <li>Un perfil completo mejora tu puntuación de match con las ofertas</li>
+                </ul>
+            </div>
+
+            <div class="card" style="background: #fffbeb; border: 1px solid #fcd34d; margin-bottom: 1.5rem;">
+                <h3 style="font-size: 1rem; margin-bottom: 0.5rem; color: var(--warning);">
+                    📊 Estado de tu perfil
+                </h3>
+                {% with completado=0 %}
+                    {% if perfil.titulo_profesional %}{% with completado=completado|add:20 %}{% endwith %}{% endif %}
+                    {% if perfil.resumen_profesional %}{% with completado=completado|add:20 %}{% endwith %}{% endif %}
+                    {% if perfil.habilidades %}{% with completado=completado|add:20 %}{% endwith %}{% endif %}
+                    {% if perfil.cv_url %}{% with completado=completado|add:20 %}{% endwith %}{% endif %}
+                    {% if perfil.años_experiencia > 0 %}{% with completado=completado|add:20 %}{% endwith %}{% endif %}
+
+                    <div style="background: white; border-radius: 0.5rem; padding: 0.5rem; margin: 0.5rem 0;">
+                        <div style="background: linear-gradient(135deg, var(--primary), var(--secondary)); height: 1rem; border-radius: 0.375rem; width: {% if perfil.titulo_profesional and perfil.resumen_profesional and perfil.habilidades and perfil.cv_url %}100{% elif perfil.titulo_profesional and perfil.resumen_profesional and perfil.habilidades %}80{% elif perfil.titulo_profesional and perfil.resumen_profesional %}60{% elif perfil.titulo_profesional %}40{% else %}20{% endif %}%;"></div>
+                    </div>
+                    <p style="margin: 0.5rem 0; font-size: 0.875rem;">
+                        Tu perfil está completo al {% if perfil.titulo_profesional and perfil.resumen_profesional and perfil.habilidades and perfil.cv_url and perfil.años_experiencia > 0 %}100{% elif perfil.titulo_profesional and perfil.resumen_profesional and perfil.habilidades and perfil.cv_url %}80{% elif perfil.titulo_profesional and perfil.resumen_profesional and perfil.habilidades %}60{% elif perfil.titulo_profesional and perfil.resumen_profesional %}40{% elif perfil.titulo_profesional %}20{% else %}0{% endif %}%
+                    </p>
+                {% endwith %}
+            </div>
+
+            <div style="display: flex; gap: 1rem;">
+                <button type="submit" class="btn btn-primary" style="flex: 1;">
+                    Guardar Cambios
+                </button>
+                <a href="{% url 'dashboard_postulante' %}" class="btn btn-outline">
+                    Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,17 +1,359 @@
-# Dependencies (pesadas, se reinstalan con npm install)
+# =============================================
+# DEPENDENCIAS Y PACKAGES
+# =============================================
 node_modules/
 package-lock.json
+yarn.lock
+pnpm-lock.yaml
+.pnp
+.pnp.js
 
-# Logs del sistema
+# =============================================
+# VARIABLES DE ENTORNO (CRÍTICO - NO SUBIR)
+# =============================================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env
+
+# Excepciones permitidas (archivos ejemplo)
+!.env.example
+!backend/.env.example
+!frontend/.env.example
+
+# =============================================
+# ARCHIVOS DE PRODUCCIÓN Y BUILD
+# =============================================
+dist/
+build/
+*.production
+.next/
+out/
+.nuxt/
+.cache/
+
+# =============================================
+# LOGS Y DEBUG
+# =============================================
+logs/
+*.log
 npm-debug.log*
 yarn-debug.log*
-*.log
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# Archivos temporales del sistema
+# =============================================
+# TESTING Y COVERAGE
+# =============================================
+coverage/
+*.coverage
+.nyc_output
+junit.xml
+test-results/
+.jest-cache/
+
+# =============================================
+# UPLOADS Y ARCHIVOS TEMPORALES
+# =============================================
+backend/uploads/*
+!backend/uploads/.gitkeep
+backend/temp/*
+!backend/temp/.gitkeep
+*.pdf
+*.doc
+*.docx
+# Excepciones de documentación
+!docs/**/*.pdf
+
+# =============================================
+# BASE DE DATOS Y BACKUPS
+# =============================================
+*.sql
+backups/
+!backend/scripts/init-db.sql
+!backend/scripts/seed.js
+
+# IMPORTANTE: db.sqlite3 debe subirse para el proyecto Django
+!db.sqlite3
+
+# =============================================
+# SISTEMA OPERATIVO
+# =============================================
+# macOS
 .DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
 Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# =============================================
+# IDEs Y EDITORES
+# =============================================
+# VSCode
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json.example
+*.code-workspace
+
+# JetBrains (WebStorm, IntelliJ, etc)
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+
+# =============================================
+# CONFIGURACIONES LOCALES
+# =============================================
+*.local
+.env.local
+config.local.js
+settings.local.json
+
+# =============================================
+# DOCKER Y CONTENEDORES
+# =============================================
+docker-compose.override.yml
+.dockerignore
+
+# =============================================
+# CERTIFICADOS Y LLAVES (SEGURIDAD)
+# =============================================
+*.pem
+*.key
+*.cert
+*.crt
+*.p12
+*.pfx
+ssl/
+certificates/
+
+# =============================================
+# ARCHIVOS TEMPORALES
+# =============================================
 *.tmp
 *.temp
+*.swp
+*.swo
+*.bak
+*.cache
+.temp/
+tmp/
 
-# IDE temporal
-.vscode/settings.json
+# =============================================
+# DEPENDENCIAS DE SISTEMA
+# =============================================
+.npm
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# =============================================
+# ARCHIVOS VARIOS
+# =============================================
+*.pid
+*.seed
+*.pid.lock
+lib-cov
+.grunt
+bower_components
+.lock-wscript
+build/Release
+.eslintcache
+.stylelintcache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+.node_repl_history
+*.tgz
+.yarn-integrity
+.turbo
+
+# =============================================
+# ESPECÍFICO DEL PROYECTO EMPLEOYA
+# =============================================
+# Archivos de sesión
+sessions/
+
+# Archivos de usuario (CVs, fotos)
+public/uploads/
+static/uploads/
+
+# Configuraciones de desarrollo local
+*.dev.js
+*.dev.json
+
+# Reportes y exports
+reports/
+exports/
+
+# Carpetas del proyecto antiguo no utilizadas
+frontend/
+backend/
+database/
+docs/
+Informe/
+
+# =============================================
+# PYTHON / DJANGO - AGREGADO PARA CUMPLIR REQUISITOS
+# =============================================
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# C extensions
+*.c
+
+# Distribution / packaging
+.Python
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+local_settings.py
+*.log
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# celery beat schedule file
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments (Python virtual environments)
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# =============================================
+# ARCHIVOS DJANGO QUE NO SE DEBEN IGNORAR
+# =============================================
+# IMPORTANTE: db.sqlite3 ya está excluido arriba con !db.sqlite3
+# NO ignorar migraciones (necesarias para el proyecto)
+# NO ignorar manage.py
+# NO ignorar configuraciones del proyecto
+
+# =============================================
+# NOTA IMPORTANTE
+# =============================================
+# Este .gitignore protege información sensible
+# NUNCA subir archivos .env con credenciales reales
+# NUNCA subir certificados SSL o llaves privadas
+# NUNCA subir archivos con datos personales de usuarios
+# REQUISITOS PROFESOR:
+# - NO SUBIR __pycache__ (restará 5 puntos)
+# - NO SUBIR entorno virtual env/venv (restará 5 puntos)
+# - SÍ SUBIR db.sqlite3 (obligatorio)
+# - SÍ TENER carpeta MyWebApps o WebApps
+# =============================================
