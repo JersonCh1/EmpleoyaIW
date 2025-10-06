@@ -1,0 +1,151 @@
+{% extends 'MyWebApps/base.html' %}
+
+{% block title %}Crear Oferta - EMPLEOYA{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 900px; margin-top: 2rem;">
+    <h1 class="mb-3">Crear Nueva Oferta de Trabajo</h1>
+
+    <div class="card">
+        <form method="POST" action="{% url 'crear_oferta' %}">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="titulo" class="form-label">Título del Puesto *</label>
+                <input type="text" id="titulo" name="titulo" class="form-control" required
+                       placeholder="Ej: Desarrollador Full Stack Senior">
+            </div>
+
+            <div class="form-group">
+                <label for="categoria" class="form-label">Categoría *</label>
+                <select id="categoria" name="categoria" class="form-control" required>
+                    <option value="">Selecciona una categoría</option>
+                    {% for cat in categorias %}
+                    <option value="{{ cat.id }}">{{ cat.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="descripcion" class="form-label">Descripción del Puesto *</label>
+                <textarea id="descripcion" name="descripcion" class="form-control" rows="5" required
+                          placeholder="Describe el puesto, las funciones principales y el perfil que buscas..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="requisitos" class="form-label">Requisitos</label>
+                <textarea id="requisitos" name="requisitos" class="form-control" rows="4"
+                          placeholder="Lista los requisitos necesarios para el puesto..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="responsabilidades" class="form-label">Responsabilidades</label>
+                <textarea id="responsabilidades" name="responsabilidades" class="form-control" rows="4"
+                          placeholder="Describe las principales responsabilidades del puesto..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="beneficios" class="form-label">Beneficios</label>
+                <textarea id="beneficios" name="beneficios" class="form-control" rows="4"
+                          placeholder="Describe los beneficios que ofreces (seguro, bonos, etc.)..."></textarea>
+            </div>
+
+            <div class="grid grid-2">
+                <div class="form-group">
+                    <label for="modalidad" class="form-label">Modalidad *</label>
+                    <select id="modalidad" name="modalidad" class="form-control" required>
+                        <option value="">Selecciona modalidad</option>
+                        <option value="presencial">Presencial</option>
+                        <option value="remoto">Remoto</option>
+                        <option value="hibrido">Híbrido</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="tipo_contrato" class="form-label">Tipo de Contrato *</label>
+                    <select id="tipo_contrato" name="tipo_contrato" class="form-control" required>
+                        <option value="">Selecciona tipo</option>
+                        <option value="tiempo_completo">Tiempo Completo</option>
+                        <option value="medio_tiempo">Medio Tiempo</option>
+                        <option value="por_proyecto">Por Proyecto</option>
+                        <option value="temporal">Temporal</option>
+                        <option value="practicas">Prácticas</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="nivel_experiencia" class="form-label">Nivel de Experiencia *</label>
+                    <select id="nivel_experiencia" name="nivel_experiencia" class="form-control" required>
+                        <option value="">Selecciona nivel</option>
+                        <option value="sin_experiencia">Sin Experiencia</option>
+                        <option value="junior">Junior (0-2 años)</option>
+                        <option value="semi_senior">Semi Senior (2-5 años)</option>
+                        <option value="senior">Senior (5+ años)</option>
+                        <option value="lider">Líder/Gerente</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="vacantes_disponibles" class="form-label">Número de Vacantes *</label>
+                    <input type="number" id="vacantes_disponibles" name="vacantes_disponibles"
+                           class="form-control" min="1" value="1" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="ubicacion" class="form-label">Ubicación</label>
+                <input type="text" id="ubicacion" name="ubicacion" class="form-control"
+                       placeholder="Ej: Lima, Peru" value="{{ empresa.ubicacion }}">
+            </div>
+
+            <div class="card" style="background: var(--light); margin-bottom: 1.5rem;">
+                <h3 style="font-size: 1rem; margin-bottom: 1rem;">Información Salarial (Opcional)</h3>
+
+                <div class="grid grid-3">
+                    <div class="form-group">
+                        <label for="salario_min" class="form-label">Salario Mínimo</label>
+                        <input type="number" id="salario_min" name="salario_min" class="form-control"
+                               step="0.01" placeholder="2000.00">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="salario_max" class="form-label">Salario Máximo</label>
+                        <input type="number" id="salario_max" name="salario_max" class="form-control"
+                               step="0.01" placeholder="3500.00">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="moneda" class="form-label">Moneda</label>
+                        <select id="moneda" name="moneda" class="form-control">
+                            <option value="PEN">PEN (Soles)</option>
+                            <option value="USD">USD (Dólares)</option>
+                            <option value="EUR">EUR (Euros)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="background: #f0f9ff; border: 1px solid #bfdbfe; margin-bottom: 1.5rem;">
+                <h3 style="font-size: 1rem; margin-bottom: 0.5rem; color: var(--primary);">
+                    ℹ️ Información
+                </h3>
+                <ul style="margin: 0; padding-left: 1.5rem; font-size: 0.875rem;">
+                    <li>La oferta será visible para todos los postulantes</li>
+                    <li>Podrás ver las postulaciones en tu dashboard</li>
+                    <li>Puedes editar o pausar la oferta en cualquier momento</li>
+                    <li>La oferta expirará automáticamente después de 30 días</li>
+                </ul>
+            </div>
+
+            <div style="display: flex; gap: 1rem;">
+                <button type="submit" class="btn btn-primary" style="flex: 1;">
+                    Publicar Oferta
+                </button>
+                <a href="{% url 'mis_ofertas' %}" class="btn btn-outline">
+                    Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

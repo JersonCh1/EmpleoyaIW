@@ -1,0 +1,79 @@
+{% extends 'MyWebApps/base.html' %}
+
+{% block title %}Iniciar Sesión - EMPLEOYA{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 500px; margin-top: 3rem;">
+    <div class="card">
+        <div class="card-header text-center">
+            <h2>Iniciar Sesión</h2>
+        </div>
+
+        <form method="POST" action="{% url 'login' %}">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="email" class="form-label">Correo Electrónico</label>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    class="form-control"
+                    required
+                    placeholder="tu@email.com"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">Contraseña</label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    class="form-control"
+                    required
+                    placeholder="Tu contraseña"
+                >
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%;">
+                Iniciar Sesión
+            </button>
+        </form>
+
+        <div style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border);">
+            <p class="text-muted">
+                ¿No tienes una cuenta?
+                <a href="{% url 'register' %}" class="text-primary fw-bold">Regístrate aquí</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Usuarios de prueba -->
+    <div class="card mt-3" style="background: #f0f9ff; border: 1px solid #bfdbfe;">
+        <h3 style="font-size: 1rem; margin-bottom: 1rem; color: var(--primary);">
+            👤 Usuarios de Prueba
+        </h3>
+
+        <div style="font-size: 0.875rem;">
+            <p class="fw-bold" style="margin-bottom: 0.5rem;">Admin:</p>
+            <p style="margin: 0 0 1rem 0; color: #374151;">
+                <strong>Email:</strong> admin@empleoya.com<br>
+                <strong>Password:</strong> 1234
+            </p>
+
+            <p class="fw-bold" style="margin-bottom: 0.5rem;">Empleador:</p>
+            <p style="margin: 0 0 1rem 0; color: #374151;">
+                <strong>Email:</strong> empresa1@empleoya.com<br>
+                <strong>Password:</strong> 1234
+            </p>
+
+            <p class="fw-bold" style="margin-bottom: 0.5rem;">Postulante:</p>
+            <p style="margin: 0; color: #374151;">
+                <strong>Email:</strong> juan.perez@gmail.com<br>
+                <strong>Password:</strong> 1234
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

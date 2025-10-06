@@ -1,0 +1,94 @@
+{% extends 'MyWebApps/base.html' %}
+
+{% block title %}Postular a {{ oferta.titulo }} - EMPLEOYA{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 800px; margin-top: 2rem;">
+    <a href="{% url 'oferta_detalle' oferta.id %}" class="btn btn-outline mb-2">← Volver a la oferta</a>
+
+    <div class="card">
+        <h1 class="card-header">Postular a Oferta</h1>
+
+        <div style="margin-bottom: 2rem;">
+            <h2 style="color: var(--primary); margin-bottom: 0.5rem;">{{ oferta.titulo }}</h2>
+            <p class="text-muted">{{ oferta.empresa.nombre_empresa }}</p>
+        </div>
+
+        <form method="POST" action="{% url 'postular_oferta' oferta.id %}">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="carta_presentacion" class="form-label">Carta de Presentación *</label>
+                <textarea
+                    id="carta_presentacion"
+                    name="carta_presentacion"
+                    class="form-control"
+                    rows="8"
+                    required
+                    placeholder="Escribe una carta de presentación que destaque tu experiencia y motivación para este puesto..."
+                >Estimado/a reclutador/a,
+
+Me dirijo a ustedes para expresar mi interés en la posición de {{ oferta.titulo }} en {{ oferta.empresa.nombre_empresa }}.
+
+[Describe tu experiencia relevante]
+
+[Explica por qué te interesa esta posición]
+
+[Menciona qué puedes aportar a la empresa]
+
+Quedo atento/a a su respuesta.
+
+Saludos cordiales,
+{{ user.nombre_completo }}</textarea>
+            </div>
+
+            <div class="card" style="background: #f0f9ff; border: 1px solid #bfdbfe; margin-bottom: 1.5rem;">
+                <h3 style="font-size: 1rem; margin-bottom: 1rem; color: var(--primary);">
+                    Tu Información
+                </h3>
+                <div style="font-size: 0.875rem;">
+                    <p style="margin: 0.5rem 0;"><strong>Nombre:</strong> {{ user.nombre_completo }}</p>
+                    <p style="margin: 0.5rem 0;"><strong>Email:</strong> {{ user.email }}</p>
+                    {% if user.telefono %}
+                    <p style="margin: 0.5rem 0;"><strong>Teléfono:</strong> {{ user.telefono }}</p>
+                    {% endif %}
+                    {% if perfil.titulo_profesional %}
+                    <p style="margin: 0.5rem 0;"><strong>Título:</strong> {{ perfil.titulo_profesional }}</p>
+                    {% endif %}
+                    {% if perfil.cv_url %}
+                    <p style="margin: 0.5rem 0;">
+                        <strong>CV:</strong>
+                        <a href="{{ perfil.cv_url }}" target="_blank" class="text-primary">Ver CV</a>
+                    </p>
+                    {% endif %}
+                </div>
+                <p style="margin-top: 1rem; font-size: 0.875rem; color: #6b7280;">
+                    ¿Necesitas actualizar tu información?
+                    <a href="{% url 'perfil_postulante' %}" class="text-primary">Editar mi perfil</a>
+                </p>
+            </div>
+
+            <div class="card" style="background: #fffbeb; border: 1px solid #fcd34d; margin-bottom: 1.5rem;">
+                <h3 style="font-size: 1rem; margin-bottom: 0.5rem; color: var(--warning);">
+                    ℹ️ Información Importante
+                </h3>
+                <ul style="margin: 0; padding-left: 1.5rem; font-size: 0.875rem;">
+                    <li>Tu información de contacto será compartida con el empleador</li>
+                    <li>Una vez enviada, la postulación no se puede editar</li>
+                    <li>El empleador podrá ver tu perfil completo</li>
+                    <li>Recibirás notificaciones sobre el estado de tu postulación</li>
+                </ul>
+            </div>
+
+            <div style="display: flex; gap: 1rem;">
+                <button type="submit" class="btn btn-primary" style="flex: 1;">
+                    Enviar Postulación
+                </button>
+                <a href="{% url 'oferta_detalle' oferta.id %}" class="btn btn-outline">
+                    Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

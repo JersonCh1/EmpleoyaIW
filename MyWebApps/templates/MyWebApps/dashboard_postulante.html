@@ -1,0 +1,168 @@
+{% extends 'MyWebApps/base.html' %}
+
+{% block title %}Dashboard Postulante - EMPLEOYA{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-3">Mi Dashboard</h1>
+
+    <!-- Información del perfil -->
+    <div class="card mb-3">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h2 style="margin-bottom: 0.5rem;">{{ user.nombre_completo }}</h2>
+                {% if perfil.titulo_profesional %}
+                <p class="text-muted">{{ perfil.titulo_profesional }}</p>
+                {% else %}
+                <p class="text-muted">Completa tu perfil para mejores oportunidades</p>
+                {% endif %}
+            </div>
+            <a href="{% url 'perfil_postulante' %}" class="btn btn-outline">Editar Perfil</a>
+        </div>
+    </div>
+
+    <!-- Estadísticas -->
+    <div class="stats">
+        <div class="stat-card">
+            <span class="stat-number">{{ stats.total_postulaciones }}</span>
+            <span class="stat-label">Postulaciones Totales</span>
+        </div>
+        <div class="stat-card" style="background: linear-gradient(135deg, var(--secondary), #059669);">
+            <span class="stat-number">{{ stats.aceptadas }}</span>
+            <span class="stat-label">Aceptadas</span>
+        </div>
+        <div class="stat-card" style="background: linear-gradient(135deg, var(--warning), #d97706);">
+            <span class="stat-number">{{ stats.en_proceso }}</span>
+            <span class="stat-label">En Proceso</span>
+        </div>
+        <div class="stat-card" style="background: linear-gradient(135deg, var(--danger), #dc2626);">
+            <span class="stat-number">{{ stats.rechazadas }}</span>
+            <span class="stat-label">Rechazadas</span>
+        </div>
+    </div>
+
+    <div class="grid" style="grid-template-columns: 2fr 1fr; gap: 2rem;">
+        <!-- Mis postulaciones -->
+        <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2>Mis Postulaciones</h2>
+                <a href="{% url 'ofertas_lista' %}" class="btn btn-primary">Buscar Empleos</a>
+            </div>
+
+            {% for postulacion in ultimas_postulaciones %}
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                    <div>
+                        <h3 style="margin-bottom: 0.5rem;">
+                            <a href="{% url 'oferta_detalle' postulacion.oferta.id %}" style="color: var(--primary); text-decoration: none;">
+                                {{ postulacion.oferta.titulo }}
+                            </a>
+                        </h3>
+                        <p class="text-muted" style="margin: 0; font-size: 0.875rem;">
+                            {{ postulacion.oferta.empresa.nombre_empresa }}
+                        </p>
+                    </div>
+                    <span class="badge
+                        {% if postulacion.estado == 'pendiente' %}badge-warning
+                        {% elif postulacion.estado == 'en_revision' or postulacion.estado == 'preseleccionado' or postulacion.estado == 'entrevista' %}badge-primary
+                        {% elif postulacion.estado == 'aceptado' %}badge-success
+                        {% elif postulacion.estado == 'rechazado' %}badge-danger
+                        {% else %}badge-primary{% endif %}">
+                        {{ postulacion.get_estado_display }}
+                    </span>
+                </div>
+
+                <div style="margin-bottom: 1rem;">
+                    <span class="badge badge-primary">{{ postulacion.oferta.get_modalidad_display }}</span>
+                    <span class="badge badge-success">{{ postulacion.oferta.get_tipo_contrato_display }}</span>
+                </div>
+
+                <div style="font-size: 0.875rem; color: var(--text); margin-bottom: 1rem;">
+                    <p style="margin: 0.25rem 0;">📍 {{ postulacion.oferta.ubicacion }}</p>
+                    <p style="margin: 0.25rem 0;">📅 Postulado el {{ postulacion.fecha_postulacion|date:"d/m/Y H:i" }}</p>
+                    {% if postulacion.puntuacion_match %}
+                    <p style="margin: 0.25rem 0;">⭐ Match: {{ postulacion.puntuacion_match }}%</p>
+                    {% endif %}
+                </div>
+
+                {% if postulacion.notas_empleador %}
+                <div style="background: #f0f9ff; padding: 0.75rem; border-radius: 0.375rem; border-left: 3px solid var(--primary); margin-bottom: 1rem;">
+                    <p class="fw-bold" style="margin-bottom: 0.5rem; font-size: 0.875rem;">Notas del empleador:</p>
+                    <p style="margin: 0; font-size: 0.875rem;">{{ postulacion.notas_empleador }}</p>
+                </div>
+                {% endif %}
+
+                <a href="{% url 'oferta_detalle' postulacion.oferta.id %}" class="btn btn-outline" style="width: 100%;">
+                    Ver Oferta
+                </a>
+            </div>
+            {% empty %}
+            <div class="card text-center" style="padding: 2rem;">
+                <p class="text-muted">No has realizado postulaciones aún</p>
+                <a href="{% url 'ofertas_lista' %}" class="btn btn-primary mt-2">Buscar Empleos</a>
+            </div>
+            {% endfor %}
+
+            {% if ultimas_postulaciones.count > 0 %}
+            <a href="{% url 'mis_postulaciones' %}" class="btn btn-outline" style="width: 100%; margin-top: 1rem;">
+                Ver Todas las Postulaciones
+            </a>
+            {% endif %}
+        </div>
+
+        <!-- Ofertas recomendadas -->
+        <div>
+            <h2 class="mb-3">Ofertas Recomendadas</h2>
+
+            {% for oferta in ofertas_recomendadas %}
+            <div class="card">
+                <h3 style="margin-bottom: 0.5rem; font-size: 1.125rem;">
+                    <a href="{% url 'oferta_detalle' oferta.id %}" style="color: var(--primary); text-decoration: none;">
+                        {{ oferta.titulo }}
+                    </a>
+                </h3>
+                <p class="text-muted" style="margin-bottom: 1rem; font-size: 0.875rem;">
+                    {{ oferta.empresa.nombre_empresa }}
+                </p>
+
+                <div style="margin-bottom: 1rem;">
+                    <span class="badge badge-primary">{{ oferta.get_modalidad_display }}</span>
+                </div>
+
+                <p style="font-size: 0.875rem; color: var(--text); margin-bottom: 1rem;">
+                    📍 {{ oferta.ubicacion }}
+                </p>
+
+                {% if oferta.salario_min and oferta.salario_max %}
+                <p class="fw-bold text-primary" style="margin-bottom: 1rem; font-size: 0.875rem;">
+                    💰 {{ oferta.moneda }} {{ oferta.salario_min }} - {{ oferta.salario_max }}
+                </p>
+                {% endif %}
+
+                <a href="{% url 'oferta_detalle' oferta.id %}" class="btn btn-primary" style="width: 100%;">
+                    Ver Detalles
+                </a>
+            </div>
+            {% empty %}
+            <div class="card text-center" style="padding: 2rem;">
+                <p class="text-muted">No hay ofertas recomendadas</p>
+            </div>
+            {% endfor %}
+
+            {% if ofertas_recomendadas.count > 0 %}
+            <a href="{% url 'ofertas_lista' %}" class="btn btn-outline" style="width: 100%; margin-top: 1rem;">
+                Ver Más Ofertas
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    @media (max-width: 968px) {
+        .grid[style*="2fr 1fr"] {
+            grid-template-columns: 1fr !important;
+        }
+    }
+</style>
+{% endblock %}

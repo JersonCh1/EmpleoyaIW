@@ -1,0 +1,187 @@
+{% extends 'MyWebApps/base.html' %}
+
+{% block title %}{{ oferta.titulo }} - EMPLEOYA{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Botón volver -->
+    <a href="{% url 'ofertas_lista' %}" class="btn btn-outline mb-2">← Volver a las ofertas</a>
+
+    <div class="grid" style="grid-template-columns: 2fr 1fr; gap: 2rem;">
+        <!-- Contenido principal -->
+        <div>
+            <!-- Encabezado -->
+            <div class="card">
+                <h1 style="color: var(--primary); margin-bottom: 1rem;">{{ oferta.titulo }}</h1>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <h3 style="margin-bottom: 0.5rem;">{{ oferta.empresa.nombre_empresa }}</h3>
+                    <p class="text-muted">{{ oferta.empresa.sector }}</p>
+                </div>
+
+                <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                    <span class="badge badge-primary">{{ oferta.get_modalidad_display }}</span>
+                    <span class="badge badge-success">{{ oferta.get_tipo_contrato_display }}</span>
+                    <span class="badge badge-warning">{{ oferta.get_nivel_experiencia_display }}</span>
+                    <span class="badge badge-primary">{{ oferta.categoria.nombre }}</span>
+                </div>
+
+                <div style="font-size: 0.875rem; color: var(--text); margin-bottom: 1.5rem;">
+                    <p style="margin: 0.5rem 0;">📍 {{ oferta.ubicacion }}</p>
+                    {% if oferta.salario_min and oferta.salario_max %}
+                    <p style="margin: 0.5rem 0; font-weight: 600; color: var(--primary); font-size: 1.125rem;">
+                        💰 {{ oferta.moneda }} {{ oferta.salario_min }} - {{ oferta.salario_max }}
+                    </p>
+                    {% endif %}
+                    <p style="margin: 0.5rem 0;">📅 Publicado hace {{ oferta.fecha_publicacion|timesince }}</p>
+                    <p style="margin: 0.5rem 0;">👁️ {{ oferta.vistas }} vistas</p>
+                    <p style="margin: 0.5rem 0;">👥 {{ oferta.vacantes_disponibles }} vacante(s) disponible(s)</p>
+                </div>
+
+                <!-- Botón de postulación -->
+                {% if user.is_authenticated and user.tipo_usuario == 'postulante' %}
+                    {% if ya_postulo %}
+                        <button class="btn btn-secondary" disabled style="width: 100%;">
+                            Ya has postulado a esta oferta
+                        </button>
+                    {% else %}
+                        <a href="{% url 'postular_oferta' oferta.id %}" class="btn btn-primary" style="width: 100%;">
+                            Postular a esta oferta
+                        </a>
+                    {% endif %}
+                {% elif user.is_authenticated and user.tipo_usuario == 'empleador' %}
+                    <button class="btn btn-secondary" disabled style="width: 100%;">
+                        Solo postulantes pueden aplicar
+                    </button>
+                {% else %}
+                    <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-primary" style="width: 100%;">
+                        Inicia sesión para postular
+                    </a>
+                {% endif %}
+            </div>
+
+            <!-- Descripción -->
+            <div class="card">
+                <h3 class="card-header">Descripción del Puesto</h3>
+                <p style="white-space: pre-line;">{{ oferta.descripcion }}</p>
+            </div>
+
+            <!-- Requisitos -->
+            {% if oferta.requisitos %}
+            <div class="card">
+                <h3 class="card-header">Requisitos</h3>
+                <p style="white-space: pre-line;">{{ oferta.requisitos }}</p>
+            </div>
+            {% endif %}
+
+            <!-- Responsabilidades -->
+            {% if oferta.responsabilidades %}
+            <div class="card">
+                <h3 class="card-header">Responsabilidades</h3>
+                <p style="white-space: pre-line;">{{ oferta.responsabilidades }}</p>
+            </div>
+            {% endif %}
+
+            <!-- Beneficios -->
+            {% if oferta.beneficios %}
+            <div class="card">
+                <h3 class="card-header">Beneficios</h3>
+                <p style="white-space: pre-line;">{{ oferta.beneficios }}</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Sidebar -->
+        <div>
+            <!-- Información de la empresa -->
+            <div class="card">
+                <h3 class="card-header">Sobre la Empresa</h3>
+
+                <div style="margin-bottom: 1rem;">
+                    <p class="fw-bold" style="margin-bottom: 0.5rem;">{{ oferta.empresa.nombre_empresa }}</p>
+                    {% if oferta.empresa.descripcion %}
+                    <p class="text-muted" style="font-size: 0.875rem;">{{ oferta.empresa.descripcion|truncatewords:30 }}</p>
+                    {% endif %}
+                </div>
+
+                <div style="font-size: 0.875rem;">
+                    {% if oferta.empresa.sector %}
+                    <p style="margin: 0.25rem 0;"><strong>Sector:</strong> {{ oferta.empresa.sector }}</p>
+                    {% endif %}
+                    {% if oferta.empresa.tamaño_empresa %}
+                    <p style="margin: 0.25rem 0;"><strong>Tamaño:</strong> {{ oferta.empresa.get_tamaño_empresa_display }}</p>
+                    {% endif %}
+                    {% if oferta.empresa.ubicacion %}
+                    <p style="margin: 0.25rem 0;"><strong>Ubicación:</strong> {{ oferta.empresa.ubicacion }}</p>
+                    {% endif %}
+                    {% if oferta.empresa.sitio_web %}
+                    <p style="margin: 0.5rem 0;">
+                        <a href="{{ oferta.empresa.sitio_web }}" target="_blank" class="text-primary">
+                            Visitar sitio web →
+                        </a>
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Información adicional -->
+            <div class="card">
+                <h3 class="card-header">Detalles</h3>
+
+                <div style="font-size: 0.875rem;">
+                    <p style="margin: 0.5rem 0;">
+                        <strong>Publicado:</strong><br>
+                        {{ oferta.fecha_publicacion|date:"d/m/Y" }}
+                    </p>
+                    <p style="margin: 0.5rem 0;">
+                        <strong>Expira:</strong><br>
+                        {{ oferta.fecha_expiracion|date:"d/m/Y" }}
+                    </p>
+                    <p style="margin: 0.5rem 0;">
+                        <strong>Estado:</strong><br>
+                        <span class="badge badge-success">{{ oferta.get_estado_display }}</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ofertas similares -->
+    {% if ofertas_similares %}
+    <div style="margin-top: 3rem;">
+        <h2 class="mb-3">Ofertas Similares</h2>
+
+        <div class="grid grid-3">
+            {% for similar in ofertas_similares %}
+            <div class="card">
+                <h3 style="margin-bottom: 0.5rem; font-size: 1.125rem;">
+                    <a href="{% url 'oferta_detalle' similar.id %}" style="color: var(--primary); text-decoration: none;">
+                        {{ similar.titulo }}
+                    </a>
+                </h3>
+                <p class="text-muted" style="margin-bottom: 1rem;">{{ similar.empresa.nombre_empresa }}</p>
+
+                <div style="margin-bottom: 1rem;">
+                    <span class="badge badge-primary">{{ similar.get_modalidad_display }}</span>
+                </div>
+
+                <p style="font-size: 0.875rem; color: var(--text);">📍 {{ similar.ubicacion }}</p>
+
+                <a href="{% url 'oferta_detalle' similar.id %}" class="btn btn-outline" style="width: 100%; margin-top: 1rem;">
+                    Ver Detalles
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    @media (max-width: 968px) {
+        .grid[style*="2fr 1fr"] {
+            grid-template-columns: 1fr !important;
+        }
+    }
+</style>
+{% endblock %}

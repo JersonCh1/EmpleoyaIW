@@ -1,0 +1,165 @@
+{% extends 'MyWebApps/base.html' %}
+
+{% block title %}Ofertas de Trabajo - EMPLEOYA{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center mb-3">Ofertas de Trabajo</h1>
+
+    <!-- Filtros -->
+    <div class="card mb-3">
+        <form method="GET" action="{% url 'ofertas_lista' %}">
+            <div class="grid grid-2">
+                <div class="form-group">
+                    <label for="search" class="form-label">Buscar</label>
+                    <input
+                        type="text"
+                        id="search"
+                        name="search"
+                        class="form-control"
+                        placeholder="Título, empresa, palabra clave..."
+                        value="{{ search }}"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="categoria" class="form-label">Categoría</label>
+                    <select id="categoria" name="categoria" class="form-control">
+                        <option value="">Todas las categorías</option>
+                        {% for cat in categorias %}
+                        <option value="{{ cat.id }}" {% if categoria_id == cat.id|stringformat:"s" %}selected{% endif %}>
+                            {{ cat.nombre }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="modalidad" class="form-label">Modalidad</label>
+                    <select id="modalidad" name="modalidad" class="form-control">
+                        <option value="">Todas</option>
+                        <option value="presencial" {% if modalidad == 'presencial' %}selected{% endif %}>Presencial</option>
+                        <option value="remoto" {% if modalidad == 'remoto' %}selected{% endif %}>Remoto</option>
+                        <option value="hibrido" {% if modalidad == 'hibrido' %}selected{% endif %}>Híbrido</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="tipo_contrato" class="form-label">Tipo de Contrato</label>
+                    <select id="tipo_contrato" name="tipo_contrato" class="form-control">
+                        <option value="">Todos</option>
+                        <option value="tiempo_completo" {% if tipo_contrato == 'tiempo_completo' %}selected{% endif %}>Tiempo Completo</option>
+                        <option value="medio_tiempo" {% if tipo_contrato == 'medio_tiempo' %}selected{% endif %}>Medio Tiempo</option>
+                        <option value="por_proyecto" {% if tipo_contrato == 'por_proyecto' %}selected{% endif %}>Por Proyecto</option>
+                        <option value="temporal" {% if tipo_contrato == 'temporal' %}selected{% endif %}>Temporal</option>
+                        <option value="practicas" {% if tipo_contrato == 'practicas' %}selected{% endif %}>Prácticas</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="ubicacion" class="form-label">Ubicación</label>
+                    <input
+                        type="text"
+                        id="ubicacion"
+                        name="ubicacion"
+                        class="form-control"
+                        placeholder="Ciudad, país..."
+                        value="{{ ubicacion }}"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="orden" class="form-label">Ordenar por</label>
+                    <select id="orden" name="orden" class="form-control">
+                        <option value="-fecha_publicacion" {% if orden == '-fecha_publicacion' %}selected{% endif %}>Más recientes</option>
+                        <option value="fecha_publicacion" {% if orden == 'fecha_publicacion' %}selected{% endif %}>Más antiguas</option>
+                        <option value="-salario_max" {% if orden == '-salario_max' %}selected{% endif %}>Mejor salario</option>
+                        <option value="-vistas" {% if orden == '-vistas' %}selected{% endif %}>Más vistas</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem;">
+                <button type="submit" class="btn btn-primary">Aplicar Filtros</button>
+                <a href="{% url 'ofertas_lista' %}" class="btn btn-outline">Limpiar Filtros</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Resultados -->
+    <p class="text-muted mb-2">{{ page_obj.paginator.count }} ofertas encontradas</p>
+
+    <div class="grid grid-2">
+        {% for oferta in page_obj %}
+        <div class="card">
+            <div style="margin-bottom: 1rem;">
+                <h3 style="margin-bottom: 0.5rem;">
+                    <a href="{% url 'oferta_detalle' oferta.id %}" style="color: var(--primary); text-decoration: none;">
+                        {{ oferta.titulo }}
+                    </a>
+                </h3>
+                <p class="text-muted" style="margin: 0;">{{ oferta.empresa.nombre_empresa }}</p>
+            </div>
+
+            <div style="margin-bottom: 1rem;">
+                <span class="badge badge-primary">{{ oferta.get_modalidad_display }}</span>
+                <span class="badge badge-success">{{ oferta.get_tipo_contrato_display }}</span>
+                <span class="badge badge-warning">{{ oferta.get_nivel_experiencia_display }}</span>
+            </div>
+
+            <div style="font-size: 0.875rem; color: var(--text); margin-bottom: 1rem;">
+                <p style="margin: 0.25rem 0;">📍 {{ oferta.ubicacion }}</p>
+                <p style="margin: 0.25rem 0;">📂 {{ oferta.categoria.nombre }}</p>
+                {% if oferta.salario_min and oferta.salario_max %}
+                <p style="margin: 0.25rem 0; font-weight: 600; color: var(--primary);">
+                    💰 {{ oferta.moneda }} {{ oferta.salario_min }} - {{ oferta.salario_max }}
+                </p>
+                {% endif %}
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; font-size: 0.875rem; color: #6b7280; margin-bottom: 1rem;">
+                <span>👁️ {{ oferta.vistas }}</span>
+                <span>•</span>
+                <span>{{ oferta.fecha_publicacion|timesince }} atrás</span>
+            </div>
+
+            <a href="{% url 'oferta_detalle' oferta.id %}" class="btn btn-primary" style="width: 100%;">
+                Ver Detalles
+            </a>
+        </div>
+        {% empty %}
+        <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+            <p class="text-muted">No se encontraron ofertas con los filtros seleccionados</p>
+            <a href="{% url 'ofertas_lista' %}" class="btn btn-outline mt-2">Ver todas las ofertas</a>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Paginación -->
+    {% if page_obj.has_other_pages %}
+    <div style="display: flex; justify-content: center; align-items: center; gap: 0.5rem; margin-top: 2rem;">
+        {% if page_obj.has_previous %}
+        <a href="?page=1{% if search %}&search={{ search }}{% endif %}{% if categoria_id %}&categoria={{ categoria_id }}{% endif %}{% if modalidad %}&modalidad={{ modalidad }}{% endif %}{% if ubicacion %}&ubicacion={{ ubicacion }}{% endif %}{% if tipo_contrato %}&tipo_contrato={{ tipo_contrato }}{% endif %}{% if orden %}&orden={{ orden }}{% endif %}" class="btn btn-outline">
+            Primera
+        </a>
+        <a href="?page={{ page_obj.previous_page_number }}{% if search %}&search={{ search }}{% endif %}{% if categoria_id %}&categoria={{ categoria_id }}{% endif %}{% if modalidad %}&modalidad={{ modalidad }}{% endif %}{% if ubicacion %}&ubicacion={{ ubicacion }}{% endif %}{% if tipo_contrato %}&tipo_contrato={{ tipo_contrato }}{% endif %}{% if orden %}&orden={{ orden }}{% endif %}" class="btn btn-outline">
+            Anterior
+        </a>
+        {% endif %}
+
+        <span class="text-muted">
+            Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}{% if search %}&search={{ search }}{% endif %}{% if categoria_id %}&categoria={{ categoria_id }}{% endif %}{% if modalidad %}&modalidad={{ modalidad }}{% endif %}{% if ubicacion %}&ubicacion={{ ubicacion }}{% endif %}{% if tipo_contrato %}&tipo_contrato={{ tipo_contrato }}{% endif %}{% if orden %}&orden={{ orden }}{% endif %}" class="btn btn-outline">
+            Siguiente
+        </a>
+        <a href="?page={{ page_obj.paginator.num_pages }}{% if search %}&search={{ search }}{% endif %}{% if categoria_id %}&categoria={{ categoria_id }}{% endif %}{% if modalidad %}&modalidad={{ modalidad }}{% endif %}{% if ubicacion %}&ubicacion={{ ubicacion }}{% endif %}{% if tipo_contrato %}&tipo_contrato={{ tipo_contrato }}{% endif %}{% if orden %}&orden={{ orden }}{% endif %}" class="btn btn-outline">
+            Última
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

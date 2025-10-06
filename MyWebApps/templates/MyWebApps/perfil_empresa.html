@@ -1,0 +1,104 @@
+{% extends 'MyWebApps/base.html' %}
+
+{% block title %}Perfil de Empresa - EMPLEOYA{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 900px; margin-top: 2rem;">
+    <h1 class="mb-3">Perfil de Mi Empresa</h1>
+
+    <div class="card">
+        <form method="POST" action="{% url 'perfil_empresa' %}">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="nombre_empresa" class="form-label">Nombre de la Empresa *</label>
+                <input type="text" id="nombre_empresa" name="nombre_empresa" class="form-control" required
+                       value="{{ empresa.nombre_empresa }}">
+            </div>
+
+            <div class="grid grid-2">
+                <div class="form-group">
+                    <label for="ruc" class="form-label">RUC</label>
+                    <input type="text" id="ruc" name="ruc" class="form-control"
+                           value="{{ empresa.ruc }}" placeholder="20123456789" maxlength="11">
+                </div>
+
+                <div class="form-group">
+                    <label for="sector" class="form-label">Sector / Industria</label>
+                    <input type="text" id="sector" name="sector" class="form-control"
+                           value="{{ empresa.sector }}" placeholder="Ej: Tecnología, Finanzas, Salud">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="descripcion" class="form-label">Descripción de la Empresa</label>
+                <textarea id="descripcion" name="descripcion" class="form-control" rows="5"
+                          placeholder="Describe tu empresa, su misión, visión y valores...">{{ empresa.descripcion }}</textarea>
+            </div>
+
+            <div class="grid grid-2">
+                <div class="form-group">
+                    <label for="ubicacion" class="form-label">Ubicación</label>
+                    <input type="text" id="ubicacion" name="ubicacion" class="form-control"
+                           value="{{ empresa.ubicacion }}" placeholder="Lima, Peru">
+                </div>
+
+                <div class="form-group">
+                    <label for="tamaño_empresa" class="form-label">Tamaño de la Empresa</label>
+                    <select id="tamaño_empresa" name="tamaño_empresa" class="form-control">
+                        <option value="startup" {% if empresa.tamaño_empresa == 'startup' %}selected{% endif %}>Startup (1-10 empleados)</option>
+                        <option value="pyme" {% if empresa.tamaño_empresa == 'pyme' %}selected{% endif %}>PYME (11-50 empleados)</option>
+                        <option value="mediana" {% if empresa.tamaño_empresa == 'mediana' %}selected{% endif %}>Mediana (51-200 empleados)</option>
+                        <option value="grande" {% if empresa.tamaño_empresa == 'grande' %}selected{% endif %}>Grande (201-1000 empleados)</option>
+                        <option value="corporacion" {% if empresa.tamaño_empresa == 'corporacion' %}selected{% endif %}>Corporación (1000+ empleados)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="sitio_web" class="form-label">Sitio Web</label>
+                    <input type="url" id="sitio_web" name="sitio_web" class="form-control"
+                           value="{{ empresa.sitio_web }}" placeholder="https://www.miempresa.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="telefono_empresa" class="form-label">Teléfono</label>
+                    <input type="tel" id="telefono_empresa" name="telefono_empresa" class="form-control"
+                           value="{{ empresa.telefono_empresa }}" placeholder="987654321">
+                </div>
+            </div>
+
+            <div class="card" style="background: var(--light); margin-bottom: 1.5rem;">
+                <h3 style="font-size: 1rem; margin-bottom: 1rem;">Información de Contacto</h3>
+                <div style="font-size: 0.875rem;">
+                    <p style="margin: 0.5rem 0;"><strong>Usuario:</strong> {{ user.nombre_completo }}</p>
+                    <p style="margin: 0.5rem 0;"><strong>Email:</strong> {{ user.email }}</p>
+                    {% if user.telefono %}
+                    <p style="margin: 0.5rem 0;"><strong>Teléfono personal:</strong> {{ user.telefono }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card" style="background: #f0f9ff; border: 1px solid #bfdbfe; margin-bottom: 1.5rem;">
+                <h3 style="font-size: 1rem; margin-bottom: 0.5rem; color: var(--primary);">
+                    💡 Consejos
+                </h3>
+                <ul style="margin: 0; padding-left: 1.5rem; font-size: 0.875rem;">
+                    <li>Una buena descripción de la empresa atrae a mejores candidatos</li>
+                    <li>Mantén tu información de contacto actualizada</li>
+                    <li>El sitio web ayuda a los candidatos a conocer más sobre tu empresa</li>
+                    <li>Los candidatos verán esta información cuando vean tus ofertas</li>
+                </ul>
+            </div>
+
+            <div style="display: flex; gap: 1rem;">
+                <button type="submit" class="btn btn-primary" style="flex: 1;">
+                    Guardar Cambios
+                </button>
+                <a href="{% url 'dashboard_empleador' %}" class="btn btn-outline">
+                    Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

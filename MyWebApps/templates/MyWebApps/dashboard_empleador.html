@@ -1,0 +1,148 @@
+{% extends 'MyWebApps/base.html' %}
+
+{% block title %}Dashboard Empleador - EMPLEOYA{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-3">Dashboard de Empleador</h1>
+
+    <!-- Información de la empresa -->
+    <div class="card mb-3">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h2 style="margin-bottom: 0.5rem;">{{ empresa.nombre_empresa }}</h2>
+                <p class="text-muted">{{ empresa.sector }}</p>
+            </div>
+            <a href="{% url 'perfil_empresa' %}" class="btn btn-outline">Editar Perfil</a>
+        </div>
+    </div>
+
+    <!-- Estadísticas -->
+    <div class="stats">
+        <div class="stat-card">
+            <span class="stat-number">{{ stats.total_ofertas }}</span>
+            <span class="stat-label">Ofertas Publicadas</span>
+        </div>
+        <div class="stat-card" style="background: linear-gradient(135deg, var(--secondary), #059669);">
+            <span class="stat-number">{{ stats.ofertas_activas }}</span>
+            <span class="stat-label">Ofertas Activas</span>
+        </div>
+        <div class="stat-card" style="background: linear-gradient(135deg, var(--warning), #d97706);">
+            <span class="stat-number">{{ stats.total_postulaciones }}</span>
+            <span class="stat-label">Total Postulaciones</span>
+        </div>
+        <div class="stat-card" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+            <span class="stat-number">{{ stats.postulaciones_pendientes }}</span>
+            <span class="stat-label">Pendientes de Revisar</span>
+        </div>
+    </div>
+
+    <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 2rem;">
+        <!-- Últimas ofertas -->
+        <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2>Mis Ofertas</h2>
+                <a href="{% url 'crear_oferta' %}" class="btn btn-primary">+ Nueva Oferta</a>
+            </div>
+
+            {% for oferta in ultimas_ofertas %}
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                    <div>
+                        <h3 style="margin-bottom: 0.5rem;">
+                            <a href="{% url 'oferta_detalle' oferta.id %}" style="color: var(--primary); text-decoration: none;">
+                                {{ oferta.titulo }}
+                            </a>
+                        </h3>
+                        <p class="text-muted" style="margin: 0; font-size: 0.875rem;">
+                            {{ oferta.categoria.nombre }} • {{ oferta.get_modalidad_display }}
+                        </p>
+                    </div>
+                    <span class="badge {% if oferta.estado == 'activa' %}badge-success{% elif oferta.estado == 'pausada' %}badge-warning{% else %}badge-danger{% endif %}">
+                        {{ oferta.get_estado_display }}
+                    </span>
+                </div>
+
+                <div style="display: flex; gap: 1rem; font-size: 0.875rem; color: #6b7280; margin-bottom: 1rem;">
+                    <span>👁️ {{ oferta.vistas }} vistas</span>
+                    <span>📝 {{ oferta.postulaciones.count }} postulaciones</span>
+                    <span>📅 {{ oferta.fecha_publicacion|date:"d/m/Y" }}</span>
+                </div>
+
+                <div style="display: flex; gap: 0.5rem;">
+                    <a href="{% url 'postulaciones_oferta' oferta.id %}" class="btn btn-primary" style="flex: 1;">
+                        Ver Postulaciones
+                    </a>
+                    <a href="{% url 'oferta_detalle' oferta.id %}" class="btn btn-outline">
+                        Ver Oferta
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="card text-center" style="padding: 2rem;">
+                <p class="text-muted">No tienes ofertas publicadas</p>
+                <a href="{% url 'crear_oferta' %}" class="btn btn-primary mt-2">Crear Primera Oferta</a>
+            </div>
+            {% endfor %}
+
+            {% if ultimas_ofertas.count > 0 %}
+            <a href="{% url 'mis_ofertas' %}" class="btn btn-outline" style="width: 100%; margin-top: 1rem;">
+                Ver Todas las Ofertas
+            </a>
+            {% endif %}
+        </div>
+
+        <!-- Últimas postulaciones -->
+        <div>
+            <h2 class="mb-3">Postulaciones Recientes</h2>
+
+            {% for postulacion in ultimas_postulaciones %}
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                    <div>
+                        <h3 style="margin-bottom: 0.5rem; font-size: 1.125rem;">
+                            {{ postulacion.postulante.usuario.nombre_completo }}
+                        </h3>
+                        <p class="text-muted" style="margin: 0; font-size: 0.875rem;">
+                            {{ postulacion.oferta.titulo }}
+                        </p>
+                    </div>
+                    <span class="badge
+                        {% if postulacion.estado == 'pendiente' %}badge-warning
+                        {% elif postulacion.estado == 'en_revision' %}badge-primary
+                        {% elif postulacion.estado == 'aceptado' %}badge-success
+                        {% elif postulacion.estado == 'rechazado' %}badge-danger
+                        {% else %}badge-primary{% endif %}">
+                        {{ postulacion.get_estado_display }}
+                    </span>
+                </div>
+
+                <div style="font-size: 0.875rem; color: var(--text); margin-bottom: 1rem;">
+                    <p style="margin: 0.25rem 0;">📧 {{ postulacion.postulante.usuario.email }}</p>
+                    <p style="margin: 0.25rem 0;">📅 {{ postulacion.fecha_postulacion|date:"d/m/Y H:i" }}</p>
+                    {% if postulacion.puntuacion_match %}
+                    <p style="margin: 0.25rem 0;">⭐ Match: {{ postulacion.puntuacion_match }}%</p>
+                    {% endif %}
+                </div>
+
+                <a href="{% url 'postulaciones_oferta' postulacion.oferta.id %}" class="btn btn-primary" style="width: 100%;">
+                    Ver Detalles
+                </a>
+            </div>
+            {% empty %}
+            <div class="card text-center" style="padding: 2rem;">
+                <p class="text-muted">No tienes postulaciones aún</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<style>
+    @media (max-width: 968px) {
+        .grid[style*="1fr 1fr"] {
+            grid-template-columns: 1fr !important;
+        }
+    }
+</style>
+{% endblock %}
