@@ -10,6 +10,8 @@ from .models import (
     OfertaTrabajo, Postulacion, Favorito, Notificacion
 )
 
+# Views del sistema EMPLEOYA
+# Acá están todas las funciones para mostrar las páginas web
 
 # ==================== VISTAS PÚBLICAS ====================
 
