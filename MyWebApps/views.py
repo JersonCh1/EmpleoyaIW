@@ -152,7 +152,7 @@ def login_view(request):
 
         if user is not None:
             login(request, user)
-            messages.success(request, f'¡Bienvenido {user.nombre}!')
+            messages.success(request, f'¡Bienvenido {user.first_name}!')
             next_url = request.GET.get('next', 'dashboard')
             return redirect(next_url)
         else:
@@ -170,8 +170,8 @@ def register_view(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
         password2 = request.POST.get('password2')
-        nombre = request.POST.get('nombre')
-        apellido = request.POST.get('apellido')
+        first_name = request.POST.get('nombre')  # El formulario sigue usando 'nombre'
+        last_name = request.POST.get('apellido')  # El formulario sigue usando 'apellido'
         telefono = request.POST.get('telefono', '')
         tipo_usuario = request.POST.get('tipo_usuario', 'postulante')
 
@@ -185,8 +185,8 @@ def register_view(request):
             user = Usuario.objects.create_user(
                 email=email,
                 password=password,
-                nombre=nombre,
-                apellido=apellido,
+                first_name=first_name,
+                last_name=last_name,
                 telefono=telefono,
                 tipo_usuario=tipo_usuario
             )
@@ -199,7 +199,7 @@ def register_view(request):
             elif tipo_usuario == 'empleador':
                 Empresa.objects.create(
                     usuario=user,
-                    nombre_empresa=request.POST.get('nombre_empresa', f'Empresa de {nombre}')
+                    nombre_empresa=request.POST.get('nombre_empresa', f'Empresa de {first_name}')
                 )
 
             messages.success(request, '¡Registro exitoso! Ahora puedes iniciar sesión')

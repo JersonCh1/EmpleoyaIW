@@ -1,20 +1,8 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from . import api_views, views
-
-# Router para viewsets (API)
-router = DefaultRouter()
-router.register(r'categorias', api_views.CategoriaViewSet, basename='categoria')
-router.register(r'ofertas', api_views.OfertaTrabajoViewSet, basename='oferta')
-router.register(r'postulaciones', api_views.PostulacionViewSet, basename='postulacion')
-router.register(r'empresas', api_views.EmpresaViewSet, basename='empresa')
-router.register(r'perfiles', api_views.PerfilPostulanteViewSet, basename='perfil')
-router.register(r'favoritos', api_views.FavoritoViewSet, basename='favorito')
-router.register(r'notificaciones', api_views.NotificacionViewSet, basename='notificacion')
+from django.urls import path
+from . import views
 
 urlpatterns = [
-    # ==================== VISTAS WEB ====================
-    # Públicas
+    # Páginas públicas
     path('', views.home, name='home'),
     path('ofertas/', views.ofertas_lista, name='ofertas_lista'),
     path('ofertas/<int:oferta_id>/', views.oferta_detalle, name='oferta_detalle'),
@@ -42,13 +30,4 @@ urlpatterns = [
     path('perfil/', views.mi_perfil, name='mi_perfil'),
     path('perfil/empresa/', views.perfil_empresa, name='perfil_empresa'),
     path('perfil/postulante/', views.perfil_postulante_view, name='perfil_postulante'),
-
-    # ==================== API REST ====================
-    path('api/auth/login/', api_views.login_api, name='api_login'),
-    path('api/auth/register/', api_views.register_api, name='api_register'),
-    path('api/auth/logout/', api_views.logout_api, name='api_logout'),
-    path('api/auth/perfil/', api_views.perfil_actual, name='api_perfil_actual'),
-    path('api/estadisticas/generales/', api_views.estadisticas_generales, name='api_estadisticas_generales'),
-    path('api/estadisticas/mis-estadisticas/', api_views.mis_estadisticas, name='api_mis_estadisticas'),
-    path('api/', include(router.urls)),
 ]

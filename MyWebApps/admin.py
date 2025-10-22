@@ -10,26 +10,26 @@ from .models import (
 class UsuarioAdmin(BaseUserAdmin):
     """Admin para el modelo Usuario"""
 
-    list_display = ['email', 'nombre', 'apellido', 'tipo_usuario', 'estado', 'email_verificado', 'fecha_creacion']
+    list_display = ['email', 'first_name', 'last_name', 'tipo_usuario', 'estado', 'email_verificado', 'date_joined']
     list_filter = ['tipo_usuario', 'estado', 'email_verificado', 'is_staff', 'is_superuser']
-    search_fields = ['email', 'nombre', 'apellido']
-    ordering = ['-fecha_creacion']
+    search_fields = ['email', 'first_name', 'last_name']
+    ordering = ['-date_joined']
 
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        ('Información Personal', {'fields': ('nombre', 'apellido', 'telefono')}),
+        ('Información Personal', {'fields': ('first_name', 'last_name', 'telefono')}),
         ('Permisos', {'fields': ('tipo_usuario', 'estado', 'email_verificado', 'is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
-        ('Fechas Importantes', {'fields': ('last_login', 'fecha_creacion', 'fecha_actualizacion')}),
+        ('Fechas Importantes', {'fields': ('last_login', 'date_joined')}),
     )
 
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'nombre', 'apellido', 'tipo_usuario', 'password1', 'password2'),
+            'fields': ('email', 'first_name', 'last_name', 'tipo_usuario', 'password1', 'password2'),
         }),
     )
 
-    readonly_fields = ['fecha_creacion', 'fecha_actualizacion', 'last_login']
+    readonly_fields = ['date_joined', 'last_login']
 
 
 @admin.register(Categoria)
@@ -59,7 +59,7 @@ class PerfilPostulanteAdmin(admin.ModelAdmin):
 
     list_display = ['usuario', 'titulo_profesional', 'nivel_experiencia', 'años_experiencia', 'completado', 'fecha_actualizacion']
     list_filter = ['nivel_experiencia', 'completado', 'disponibilidad']
-    search_fields = ['usuario__email', 'usuario__nombre', 'titulo_profesional', 'habilidades']
+    search_fields = ['usuario__email', 'usuario__first_name', 'usuario__last_name', 'titulo_profesional', 'habilidades']
     ordering = ['-fecha_actualizacion']
     readonly_fields = ['fecha_creacion', 'fecha_actualizacion']
 
@@ -105,7 +105,7 @@ class PostulacionAdmin(admin.ModelAdmin):
 
     list_display = ['postulante', 'oferta', 'estado', 'puntuacion_match', 'fecha_postulacion', 'fecha_cambio_estado']
     list_filter = ['estado', 'fecha_postulacion']
-    search_fields = ['postulante__usuario__email', 'postulante__usuario__nombre', 'oferta__titulo']
+    search_fields = ['postulante__usuario__email', 'postulante__usuario__first_name', 'postulante__usuario__last_name', 'oferta__titulo']
     ordering = ['-fecha_postulacion']
     readonly_fields = ['fecha_postulacion', 'fecha_cambio_estado']
 

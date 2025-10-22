@@ -1,13 +1,14 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils import timezone
 
 # Modelos para el sistema EMPLEOYA
 # Aquí definimos las tablas de la base de datos
 
+
 class UsuarioManager(BaseUserManager):
-    """Manager para crear usuarios - necesario para usar email en vez de username"""
+    """Manager personalizado para el modelo Usuario"""
 
     def create_user(self, email, password=None, **extra_fields):
         """Crear y guardar un usuario regular"""
@@ -26,11 +27,19 @@ class UsuarioManager(BaseUserManager):
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('tipo_usuario', 'admin')
 
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser debe tener is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser debe tener is_superuser=True.')
+
         return self.create_user(email, password, **extra_fields)
 
 
-class Usuario(AbstractBaseUser, PermissionsMixin):
-    """Modelo de Usuario para EMPLEOYA"""
+class Usuario(AbstractUser):
+    """
+    Modelo de Usuario personalizado para EMPLEOYA
+    Extiende de AbstractUser de Django para aprovechar la funcionalidad integrada
+    """
 
     TIPO_USUARIO_CHOICES = [
         ('postulante', 'Postulante'),
@@ -44,9 +53,11 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
         ('suspendido', 'Suspendido'),
     ]
 
+    # Sobrescribir username para no usarlo (usaremos email)
+    username = None
+
+    # Campos personalizados para EMPLEOYA
     email = models.EmailField(unique=True, verbose_name='Correo Electrónico')
-    nombre = models.CharField(max_length=100, verbose_name='Nombre')
-    apellido = models.CharField(max_length=100, blank=True, verbose_name='Apellido')
     telefono = models.CharField(max_length=20, blank=True, null=True, verbose_name='Teléfono')
     tipo_usuario = models.CharField(
         max_length=20,
@@ -61,30 +72,26 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
         verbose_name='Estado'
     )
     email_verificado = models.BooleanField(default=False, verbose_name='Email Verificado')
-    fecha_creacion = models.DateTimeField(auto_now_add=True, verbose_name='Fecha de Creación')
-    fecha_actualizacion = models.DateTimeField(auto_now=True, verbose_name='Última Actualización')
 
-    # Campos requeridos por Django
-    is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
-
+    # Usar el manager personalizado
     objects = UsuarioManager()
 
+    # Configurar email como campo de login
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['nombre']
+    REQUIRED_FIELDS = ['first_name', 'last_name']
 
     class Meta:
         db_table = 'usuario'
         verbose_name = 'Usuario'
         verbose_name_plural = 'Usuarios'
-        ordering = ['-fecha_creacion']
+        ordering = ['-date_joined']
 
     def __str__(self):
-        return f"{self.nombre} {self.apellido} ({self.email})"
+        return f"{self.first_name} {self.last_name} ({self.email})"
 
     @property
     def nombre_completo(self):
-        return f"{self.nombre} {self.apellido}".strip()
+        return f"{self.first_name} {self.last_name}".strip()
 
 
 class Categoria(models.Model):
